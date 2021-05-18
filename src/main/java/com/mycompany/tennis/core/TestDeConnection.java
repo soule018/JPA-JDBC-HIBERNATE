@@ -12,7 +12,7 @@ public class TestDeConnection {
             //Class.forName(DRIVER_CLASS_NAME);
 
             //MySQL driver MySQL Connector
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/TENNIS?useSSL=false&useLegacyDatetimeCode=false&serverTimezone=Europe/Paris","root","my-secret-pw");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/TENNIS?useSSL=false","root","my-secret-pw");
             //Oracle Driver officiel OJDBC Thin
             //conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:tennis","COURSDB","COURSDB");
             //Postgres Driver officiel
