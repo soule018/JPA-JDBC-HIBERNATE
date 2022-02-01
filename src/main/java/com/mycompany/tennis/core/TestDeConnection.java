@@ -13,11 +13,8 @@ public class TestDeConnection {
         Joueur bartoli = joueurRepository.getById(21L);
         System.out.println(bartoli.getPrenom()+" "+bartoli.getNom());
 
-        Joueur noah =joueurRepository.getById(70L);
-        System.out.println(noah.getPrenom()+" "+noah.getNom());
-        noah.setPrenom("Yannick");
-        joueurRepository.update(noah);
-        System.out.println(noah.getPrenom()+" "+noah.getNom());
+        joueurRepository.delete(70L);
+      
 
 
 
