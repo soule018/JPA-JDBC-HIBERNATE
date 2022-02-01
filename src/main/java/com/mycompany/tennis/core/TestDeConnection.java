@@ -14,7 +14,11 @@ public class TestDeConnection {
             MysqlDataSource dataSource = new MysqlDataSource();
 
             //Pour obtenir une connexion de cette dataSource
-            dataSource.setUrl("jdbc:mysql://localhost:3306/TENNIS?useSSL=false");
+            //dataSource.setUrl("jdbc:mysql://localhost:3306/TENNIS?useSSL=false");
+            dataSource.setServerName("localhost");
+            dataSource.setPort(3306);
+            dataSource.setDatabaseName("TENNIS");
+            dataSource.setUseSSL(false);
             dataSource.setUser("root");
             dataSource.setPassword("my-secret-pw");
             conn=dataSource.getConnection();
