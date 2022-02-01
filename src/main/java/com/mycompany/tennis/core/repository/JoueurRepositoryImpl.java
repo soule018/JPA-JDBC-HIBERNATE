@@ -1,8 +1,9 @@
 package com.mycompany.tennis.core.repository;
 
+import com.mycompany.tennis.core.DataSourceProvider;
 import com.mycompany.tennis.core.entity.Joueur;
-import org.apache.commons.dbcp2.BasicDataSource;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,19 +23,7 @@ public class JoueurRepositoryImpl {
             utiliser la classe MySQL DataSource, on va utiliser une DataSource
             générique, c'est la classe BasicDataSource de Commons DBCP
              */
-            BasicDataSource dataSource = new BasicDataSource();
-
-            /*
-            Au démarrage de l'application, 5 connexions vont être ouvertes
-            et déposées dans le pool et mises à disposition de l'application
-             */
-            //dataSource.setInitialSize(5);
-
-
-            //Pour obtenir une connexion de cette dataSource
-            dataSource.setUrl("jdbc:mysql://localhost:3306/TENNIS?useSSL=false");
-            dataSource.setUsername("root");
-            dataSource.setPassword("my-secret-pw");
+            DataSource dataSource = DataSourceProvider.getSingleDataSourceInstance();
             conn=dataSource.getConnection();
 
             conn = dataSource.getConnection();
@@ -80,12 +69,7 @@ public class JoueurRepositoryImpl {
         Connection conn = null;
         try {
 
-            BasicDataSource dataSource = new BasicDataSource();
-
-            //Pour obtenir une connexion de cette dataSource
-            dataSource.setUrl("jdbc:mysql://localhost:3306/TENNIS?useSSL=false");
-            dataSource.setUsername("root");
-            dataSource.setPassword("my-secret-pw");
+            DataSource dataSource = DataSourceProvider.getSingleDataSourceInstance();
             conn = dataSource.getConnection();
 
             conn = dataSource.getConnection();
@@ -130,12 +114,7 @@ public class JoueurRepositoryImpl {
         Connection conn = null;
         try {
 
-            BasicDataSource dataSource = new BasicDataSource();
-
-            //Pour obtenir une connexion de cette dataSource
-            dataSource.setUrl("jdbc:mysql://localhost:3306/TENNIS?useSSL=false");
-            dataSource.setUsername("root");
-            dataSource.setPassword("my-secret-pw");
+            DataSource dataSource = DataSourceProvider.getSingleDataSourceInstance();
             conn = dataSource.getConnection();
 
             conn = dataSource.getConnection();
@@ -177,12 +156,7 @@ public class JoueurRepositoryImpl {
         Joueur joueur=null;
         try {
 
-            BasicDataSource dataSource = new BasicDataSource();
-
-            //Pour obtenir une connexion de cette dataSource
-            dataSource.setUrl("jdbc:mysql://localhost:3306/TENNIS?useSSL=false");
-            dataSource.setUsername("root");
-            dataSource.setPassword("my-secret-pw");
+            DataSource dataSource = DataSourceProvider.getSingleDataSourceInstance();
             conn = dataSource.getConnection();
 
             conn = dataSource.getConnection();
@@ -233,12 +207,7 @@ public class JoueurRepositoryImpl {
         List<Joueur> joueurs=new ArrayList<>();
         try {
 
-            BasicDataSource dataSource = new BasicDataSource();
-
-            //Pour obtenir une connexion de cette dataSource
-            dataSource.setUrl("jdbc:mysql://localhost:3306/TENNIS?useSSL=false");
-            dataSource.setUsername("root");
-            dataSource.setPassword("my-secret-pw");
+          DataSource dataSource = DataSourceProvider.getSingleDataSourceInstance();
             conn = dataSource.getConnection();
 
             conn = dataSource.getConnection();
