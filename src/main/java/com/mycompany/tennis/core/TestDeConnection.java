@@ -17,6 +17,13 @@ public class TestDeConnection {
              */
             BasicDataSource dataSource = new BasicDataSource();
 
+            /*
+            Au démarrage de l'application, 5 connexions vont être ouvertes
+            et déposées dans le pool et mises à disposition de l'application
+             */
+            //dataSource.setInitialSize(5);
+
+
             //Pour obtenir une connexion de cette dataSource
             dataSource.setUrl("jdbc:mysql://localhost:3306/TENNIS?useSSL=false");
             dataSource.setUsername("root");
