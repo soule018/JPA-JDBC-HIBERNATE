@@ -1,6 +1,7 @@
 package com.mycompany.tennis.core;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.*;
 
@@ -9,21 +10,20 @@ public class TestDeConnection {
         Connection conn = null;
         try {
             /*
-            Instanciation de la classe MySQL DataSource
+            Instanciation de la classe BasicDataSource;
+            Avec l'utilisation de dépendance Commons DBCP, on ne vas plus
+            utiliser la classe MySQL DataSource, on va utiliser une DataSource
+            générique, c'est la classe BasicDataSource de Commons DBCP
              */
-            MysqlDataSource dataSource = new MysqlDataSource();
+            BasicDataSource dataSource = new BasicDataSource();
 
             //Pour obtenir une connexion de cette dataSource
-            //dataSource.setUrl("jdbc:mysql://localhost:3306/TENNIS?useSSL=false");
-            dataSource.setServerName("localhost");
-            dataSource.setPort(3306);
-            dataSource.setDatabaseName("TENNIS");
-            dataSource.setUseSSL(false);
-            dataSource.setUser("root");
+            dataSource.setUrl("jdbc:mysql://localhost:3306/TENNIS?useSSL=false");
+            dataSource.setUsername("root");
             dataSource.setPassword("my-secret-pw");
             conn=dataSource.getConnection();
 
-            //conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/TENNIS?useSSL=false","root","my-secret-pw");
+            conn = dataSource.getConnection();
 
             /*
             Toutes les modifications que nous allons faire vont être mise
