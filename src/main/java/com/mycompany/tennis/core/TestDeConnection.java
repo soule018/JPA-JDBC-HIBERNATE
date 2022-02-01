@@ -16,19 +16,21 @@ public class TestDeConnection {
 
              */
             Statement statement = conn.createStatement();
-            ResultSet rs=statement.executeQuery("SELECT NOM,PRENOM,ID FROM JOUEUR ");
+            ResultSet rs=statement.executeQuery("SELECT NOM,PRENOM,ID FROM JOUEUR WHERE ID=12 ");
 
             /*
             On veut récupérer la colonne nom, prenom, d'où l'utilisation du while
              */
 
-            while(rs.next()){
+            if(rs.next()){
                 final String nom=rs.getString("NOM");
                 final String prenom=rs.getString("PRENOM");
                 final Long id=rs.getLong("ID");
                 System.out.println("Le joueur / la joueuse représenté(e) par le numéro "+id+" est "+prenom+" "+nom);
-            };
-
+            }
+            else {
+                System.out.println("Il n'y a pas d'enregositrement d'ID 12");
+            }
 
 
             System.out.println("success");
