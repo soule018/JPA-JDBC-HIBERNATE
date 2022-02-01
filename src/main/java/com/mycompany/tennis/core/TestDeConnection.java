@@ -1,13 +1,25 @@
 package com.mycompany.tennis.core;
 
+import com.mysql.cj.jdbc.MysqlDataSource;
+
 import java.sql.*;
 
 public class TestDeConnection {
     public static void main(String... args){
         Connection conn = null;
         try {
+            /*
+            Instanciation de la classe MySQL DataSource
+             */
+            MysqlDataSource dataSource = new MysqlDataSource();
 
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/TENNIS?useSSL=false","root","my-secret-pw");
+            //Pour obtenir une connexion de cette dataSource
+            dataSource.setUrl("jdbc:mysql://localhost:3306/TENNIS?useSSL=false");
+            dataSource.setUser("root");
+            dataSource.setPassword("my-secret-pw");
+            conn=dataSource.getConnection();
+
+            //conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/TENNIS?useSSL=false","root","my-secret-pw");
 
             /*
             Toutes les modifications que nous allons faire vont être mise
