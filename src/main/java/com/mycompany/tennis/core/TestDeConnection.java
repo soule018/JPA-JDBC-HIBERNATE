@@ -1,8 +1,6 @@
 package com.mycompany.tennis.core;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class TestDeConnection {
     public static void main(String... args){
@@ -13,10 +11,26 @@ public class TestDeConnection {
 
             //MySQL driver MySQL Connector
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/TENNIS?useSSL=false","root","my-secret-pw");
-            //Oracle Driver officiel OJDBC Thin
-            //conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:tennis","COURSDB","COURSDB");
-            //Postgres Driver officiel
-            //conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/tennis","COURSDB","COURSDB");
+            /*
+            Etape 1 : création d'un objet de type statement
+
+             */
+            Statement statement = conn.createStatement();
+            ResultSet rs=statement.executeQuery("SELECT NOM,PRENOM,ID FROM JOUEUR ");
+
+            /*
+            On veut récupérer la colonne nom, prenom, d'où l'utilisation du while
+             */
+
+            while(rs.next()){
+                final String nom=rs.getString("NOM");
+                final String prenom=rs.getString("PRENOM");
+                final Long id=rs.getLong("ID");
+                System.out.println("Le joueur / la joueuse représenté(e) par le numéro "+id+" est "+prenom+" "+nom);
+            };
+
+
+
             System.out.println("success");
         } catch (SQLException e) {
             e.printStackTrace();
