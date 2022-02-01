@@ -6,15 +6,17 @@ import com.mysql.cj.jdbc.MysqlDataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.*;
+import java.util.List;
 
 public class TestDeConnection {
     public static void main(String... args){
         JoueurRepositoryImpl joueurRepository=new JoueurRepositoryImpl();
-        Joueur bartoli = joueurRepository.getById(21L);
-        System.out.println(bartoli.getPrenom()+" "+bartoli.getNom());
+        List<Joueur>listJoueur =joueurRepository.list();
 
-        joueurRepository.delete(70L);
-      
+        for(Joueur joueur : listJoueur){
+            System.out.println(joueur.getPrenom()+" "+joueur.getNom());
+        }
+
 
 
 

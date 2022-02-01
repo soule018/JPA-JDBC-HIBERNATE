@@ -212,7 +212,7 @@ public class JoueurRepositoryImpl {
 
             conn = dataSource.getConnection();
 
-            PreparedStatement preparedStatement = conn.prepareStatement("SELECT ID,NOM,PRENOM,SEXE FROM JOUEUR WHERE ID=?");
+            PreparedStatement preparedStatement = conn.prepareStatement("SELECT ID,NOM,PRENOM,SEXE FROM JOUEUR");
             /*
             les méthodes set de preparedStatement prennent en 1er paramètre
             l'index du ? dans la requête sql,
