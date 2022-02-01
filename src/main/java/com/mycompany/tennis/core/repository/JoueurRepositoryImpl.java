@@ -1,4 +1,289 @@
 package com.mycompany.tennis.core.repository;
 
+import com.mycompany.tennis.core.entity.Joueur;
+import org.apache.commons.dbcp2.BasicDataSource;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class JoueurRepositoryImpl {
+
+    public void create (Joueur joueur){
+
+        Connection conn = null;
+        try {
+            /*
+            Instanciation de la classe BasicDataSource;
+            Avec l'utilisation de dépendance Commons DBCP, on ne vas plus
+            utiliser la classe MySQL DataSource, on va utiliser une DataSource
+            générique, c'est la classe BasicDataSource de Commons DBCP
+             */
+            BasicDataSource dataSource = new BasicDataSource();
+
+            /*
+            Au démarrage de l'application, 5 connexions vont être ouvertes
+            et déposées dans le pool et mises à disposition de l'application
+             */
+            //dataSource.setInitialSize(5);
+
+
+            //Pour obtenir une connexion de cette dataSource
+            dataSource.setUrl("jdbc:mysql://localhost:3306/TENNIS?useSSL=false");
+            dataSource.setUsername("root");
+            dataSource.setPassword("my-secret-pw");
+            conn=dataSource.getConnection();
+
+            conn = dataSource.getConnection();
+
+            PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO JOUEUR (NOM,PRENOM,SEXE) VALUES (?,?,?)");
+            /*
+            les méthodes set de preparedStatement prennent en 1er paramètre
+            l'index du ? dans la requête sql,
+            ici, on a un seul paramètre,
+            le 2ème paramètre est la valeur qu'on veut donner à ce ?
+             */
+
+            preparedStatement.setString(1,joueur.getNom());
+            preparedStatement.setString(2, joueur.getPrenom());
+            preparedStatement.setString(3,joueur.getSexe().toString());
+
+            preparedStatement.executeUpdate();
+
+
+            System.out.println("Joueur créé");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try {
+                if(conn!=null) conn.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+        }
+        finally {
+            try {
+                if (conn!=null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    public void update (Joueur joueur) {
+
+        Connection conn = null;
+        try {
+
+            BasicDataSource dataSource = new BasicDataSource();
+
+            //Pour obtenir une connexion de cette dataSource
+            dataSource.setUrl("jdbc:mysql://localhost:3306/TENNIS?useSSL=false");
+            dataSource.setUsername("root");
+            dataSource.setPassword("my-secret-pw");
+            conn = dataSource.getConnection();
+
+            conn = dataSource.getConnection();
+
+            PreparedStatement preparedStatement = conn.prepareStatement("UPDATE JOUEUR SET NOM=?,PRENOM=?,SEXE=? WHERE ID=?");
+            /*
+            les méthodes set de preparedStatement prennent en 1er paramètre
+            l'index du ? dans la requête sql,
+            ici, on a un seul paramètre,
+            le 2ème paramètre est la valeur qu'on veut donner à ce ?
+             */
+
+            preparedStatement.setString(1, joueur.getNom());
+            preparedStatement.setString(2, joueur.getPrenom());
+            preparedStatement.setString(3, joueur.getSexe().toString());
+            preparedStatement.setLong(4,joueur.getId());
+
+            preparedStatement.executeUpdate();
+
+
+            System.out.println("Joueur modifié");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try {
+                if (conn != null) conn.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void delete (Long id) {
+
+        Connection conn = null;
+        try {
+
+            BasicDataSource dataSource = new BasicDataSource();
+
+            //Pour obtenir une connexion de cette dataSource
+            dataSource.setUrl("jdbc:mysql://localhost:3306/TENNIS?useSSL=false");
+            dataSource.setUsername("root");
+            dataSource.setPassword("my-secret-pw");
+            conn = dataSource.getConnection();
+
+            conn = dataSource.getConnection();
+
+            PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM JOUEUR WHERE ID=?");
+            /*
+            les méthodes set de preparedStatement prennent en 1er paramètre
+            l'index du ? dans la requête sql,
+            ici, on a un seul paramètre,
+            le 2ème paramètre est la valeur qu'on veut donner à ce ?
+             */
+            preparedStatement.setLong(1,id);
+
+            preparedStatement.executeUpdate();
+
+
+            System.out.println("Joueur supprimé");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try {
+                if (conn != null) conn.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public Joueur getById (Long id) {
+
+        Connection conn = null;
+        Joueur joueur=null;
+        try {
+
+            BasicDataSource dataSource = new BasicDataSource();
+
+            //Pour obtenir une connexion de cette dataSource
+            dataSource.setUrl("jdbc:mysql://localhost:3306/TENNIS?useSSL=false");
+            dataSource.setUsername("root");
+            dataSource.setPassword("my-secret-pw");
+            conn = dataSource.getConnection();
+
+            conn = dataSource.getConnection();
+
+            PreparedStatement preparedStatement = conn.prepareStatement("SELECT NOM,PRENOM,SEXE FROM JOUEUR WHERE ID=?");
+            /*
+            les méthodes set de preparedStatement prennent en 1er paramètre
+            l'index du ? dans la requête sql,
+            ici, on a un seul paramètre,
+            le 2ème paramètre est la valeur qu'on veut donner à ce ?
+             */
+            preparedStatement.setLong(1,id);
+
+            ResultSet rs =preparedStatement.executeQuery();
+
+            if(rs.next()){
+                joueur=new Joueur();
+                joueur.setId(id);
+                joueur.setNom(rs.getString("NOM"));
+                joueur.setPrenom(rs.getString("PRENOM"));
+                joueur.setSexe(rs.getString("SEXE").charAt(0));
+            }
+
+
+            System.out.println("Joueur lu");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try {
+                if (conn != null) conn.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return joueur;
+    }
+
+    public List<Joueur> list () {
+
+        Connection conn = null;
+        List<Joueur> joueurs=new ArrayList<>();
+        try {
+
+            BasicDataSource dataSource = new BasicDataSource();
+
+            //Pour obtenir une connexion de cette dataSource
+            dataSource.setUrl("jdbc:mysql://localhost:3306/TENNIS?useSSL=false");
+            dataSource.setUsername("root");
+            dataSource.setPassword("my-secret-pw");
+            conn = dataSource.getConnection();
+
+            conn = dataSource.getConnection();
+
+            PreparedStatement preparedStatement = conn.prepareStatement("SELECT ID,NOM,PRENOM,SEXE FROM JOUEUR WHERE ID=?");
+            /*
+            les méthodes set de preparedStatement prennent en 1er paramètre
+            l'index du ? dans la requête sql,
+            ici, on a un seul paramètre,
+            le 2ème paramètre est la valeur qu'on veut donner à ce ?
+             */
+
+
+            ResultSet rs =preparedStatement.executeQuery();
+
+            while(rs.next()){
+                Joueur joueur=new Joueur();
+                joueur.setId(rs.getLong("ID"));
+                joueur.setNom(rs.getString("NOM"));
+                joueur.setPrenom(rs.getString("PRENOM"));
+                joueur.setSexe(rs.getString("SEXE").charAt(0));
+                joueurs.add(joueur);
+            }
+
+
+            System.out.println("joueurs lus");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try {
+                if (conn != null) conn.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return joueurs;
+    }
+
+
 }
+
