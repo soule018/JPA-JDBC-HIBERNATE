@@ -13,9 +13,18 @@ public class TestDeConnection {
         JoueurRepositoryImpl joueurRepository=new JoueurRepositoryImpl();
         List<Joueur>listJoueur =joueurRepository.list();
 
+        Joueur noah=new Joueur();
+        noah.setNom("Noah");
+        noah.setPrenom("Yannik");
+        noah.setSexe('H');
+        joueurRepository.create(noah);
+
+        System.out.println("L'identifiant du joueur crée est "+noah.getId());
+
+        /*
         for(Joueur joueur : listJoueur){
             System.out.println(joueur.getPrenom()+" "+joueur.getNom());
-        }
+        }*/
 
 
 

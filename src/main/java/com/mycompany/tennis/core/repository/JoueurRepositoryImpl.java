@@ -4,10 +4,7 @@ import com.mycompany.tennis.core.DataSourceProvider;
 import com.mycompany.tennis.core.entity.Joueur;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +25,7 @@ public class JoueurRepositoryImpl {
 
             conn = dataSource.getConnection();
 
-            PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO JOUEUR (NOM,PRENOM,SEXE) VALUES (?,?,?)");
+            PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO JOUEUR (NOM,PRENOM,SEXE) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
             /*
             les méthodes set de preparedStatement prennent en 1er paramètre
             l'index du ? dans la requête sql,
@@ -41,6 +38,18 @@ public class JoueurRepositoryImpl {
             preparedStatement.setString(3,joueur.getSexe().toString());
 
             preparedStatement.executeUpdate();
+
+            /*
+            Cette méthode fournit un ResultSet;
+            Il s'agit de toutes les valeurs autogénérées après insertion de l'enregistrement
+             */
+             ResultSet rs=preparedStatement.getGeneratedKeys();
+             //on insert une seule ligne d'où l'utilisation du if
+             if(rs.next()){
+                 rs.getLong(1);
+                 joueur.setId(rs.getLong(1));
+             }
+
 
 
             System.out.println("Joueur créé");
