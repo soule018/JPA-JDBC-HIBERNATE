@@ -11,15 +11,22 @@ import java.util.List;
 public class TestDeConnection {
     public static void main(String... args){
         TournoiRepositoryImpl tournoiRepository=new TournoiRepositoryImpl();
-
-        Tournoi tournoi =new Tournoi();
+        Tournoi tournoi = new Tournoi();
         tournoi.setNom("Paris-Bercy");
         tournoi.setCode("PB");
-        tournoiRepository.create(tournoi);
+        tournoi.setId(17L);
+        tournoiRepository.update(tournoi);
+        
+        System.out.println(tournoi.getNom()+" "+tournoi.getCode());
 
-        Tournoi paris = tournoiRepository.getById(17L);
-        System.out.println(paris.getNom()+" "+paris.getCode());
 
+
+
+       // Joueur noah =joueurRepository.getById(70L);
+        //System.out.println(noah.getPrenom()+" "+noah.getNom());
+       // noah.setPrenom("Yannick");
+        //joueurRepository.update(noah);
+        //System.out.println(noah.getPrenom()+" "+noah.getNom());
        /*
         List<Joueur>listJoueur =joueurRepository.list();
         Joueur noah=new Joueur();
