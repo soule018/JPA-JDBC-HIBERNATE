@@ -11,13 +11,10 @@ import java.util.List;
 public class TestDeConnection {
     public static void main(String... args){
         TournoiRepositoryImpl tournoiRepository=new TournoiRepositoryImpl();
-        Tournoi tournoi = new Tournoi();
-        tournoi.setNom("Paris-Bercy");
-        tournoi.setCode("PB");
-        tournoi.setId(17L);
-        tournoiRepository.update(tournoi);
-        
-        System.out.println(tournoi.getNom()+" "+tournoi.getCode());
+
+        tournoiRepository.delete(18L);
+
+
 
 
 
