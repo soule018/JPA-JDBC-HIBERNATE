@@ -1,7 +1,7 @@
 package com.mycompany.tennis.core;
 
-import com.mycompany.tennis.core.entity.Joueur;
-import com.mycompany.tennis.core.repository.JoueurRepositoryImpl;
+import com.mycompany.tennis.core.entity.Tournoi;
+import com.mycompany.tennis.core.repository.TournoiRepositoryImpl;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 
@@ -10,9 +10,18 @@ import java.util.List;
 
 public class TestDeConnection {
     public static void main(String... args){
-        JoueurRepositoryImpl joueurRepository=new JoueurRepositoryImpl();
-        List<Joueur>listJoueur =joueurRepository.list();
+        TournoiRepositoryImpl tournoiRepository=new TournoiRepositoryImpl();
 
+        Tournoi tournoi =new Tournoi();
+        tournoi.setNom("Paris-Bercy");
+        tournoi.setCode("PB");
+        tournoiRepository.create(tournoi);
+
+        Tournoi paris = tournoiRepository.getById(17L);
+        System.out.println(paris.getNom()+" "+paris.getCode());
+
+       /*
+        List<Joueur>listJoueur =joueurRepository.list();
         Joueur noah=new Joueur();
         noah.setNom("Noah");
         noah.setPrenom("Yannik");
@@ -21,7 +30,7 @@ public class TestDeConnection {
 
         System.out.println("L'identifiant du joueur crée est "+noah.getId());
 
-        /*
+
         for(Joueur joueur : listJoueur){
             System.out.println(joueur.getPrenom()+" "+joueur.getNom());
         }*/
