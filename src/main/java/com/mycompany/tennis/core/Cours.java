@@ -31,7 +31,7 @@ public class Cours {
         match.setFinaliste(finaliste);
         match.setEpreuve(epreuve);
         matchService.enregisterNouveauMatch(match);
-       
+
         /*JoueurService joueurService=new JoueurService();
 
         Joueur noah=joueurService.getById(72L);
