@@ -1,18 +1,21 @@
 package com.mycompany.tennis.core;
 
 import com.mycompany.tennis.core.entity.Joueur;
-import com.mycompany.tennis.core.repository.JoueurRepositoryImpl;
+import com.mycompany.tennis.core.service.JoueurService;
 
-import java.util.List;
+
 
 public class TestDeConnection {
     public static void main(String... args){
-        JoueurRepositoryImpl joueurRepository=new JoueurRepositoryImpl();
-        List<Joueur>listJoueur =joueurRepository.list();
+        JoueurService joueurService=new JoueurService();
+        Joueur noah=new Joueur();
+        noah.setNom("Noah");
+        noah.setPrenom("Yannick");
+        noah.setSexe('H');
+        joueurService.createJoueur(noah);
 
-        for(Joueur joueur : listJoueur){
-            System.out.println("Joueur numéro : "+joueur.getId()+" ; nom : "+joueur.getNom()+" ; prénom : "+joueur.getPrenom()+" ; sexe : "+joueur.getSexe());
-        }
+        System.out.println("L'identifiant du joueur créé est "+noah.getId());
+
 
 
 
