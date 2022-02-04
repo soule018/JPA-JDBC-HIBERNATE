@@ -1,21 +1,18 @@
 package com.mycompany.tennis.core;
 
-import com.mycompany.tennis.core.entity.Tournoi;
-import com.mycompany.tennis.core.repository.TournoiRepositoryImpl;
+import com.mycompany.tennis.core.entity.Joueur;
+import com.mycompany.tennis.core.repository.JoueurRepositoryImpl;
+
 import java.util.List;
 
 public class TestDeConnection {
     public static void main(String... args){
-        TournoiRepositoryImpl tournoiRepository=new TournoiRepositoryImpl();
+        JoueurRepositoryImpl joueurRepository=new JoueurRepositoryImpl();
+        List<Joueur>listJoueur =joueurRepository.list();
 
-        List<Tournoi>listTournoi=tournoiRepository.list();
-
-        for(Tournoi list : listTournoi){
-            System.out.println(list.getNom()+" "+list.getCode());
+        for(Joueur joueur : listJoueur){
+            System.out.println("Joueur numéro : "+joueur.getId()+" ; nom : "+joueur.getNom()+" ; prénom : "+joueur.getPrenom()+" ; sexe : "+joueur.getSexe());
         }
-
-
-
 
 
 
@@ -23,4 +20,3 @@ public class TestDeConnection {
 
     }
 }
-
