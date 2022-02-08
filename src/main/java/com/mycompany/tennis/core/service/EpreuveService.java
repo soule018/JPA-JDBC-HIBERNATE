@@ -3,6 +3,7 @@ package com.mycompany.tennis.core.service;
 import com.mycompany.tennis.core.HibernateUtil;
 import com.mycompany.tennis.core.entity.Epreuve;
 import com.mycompany.tennis.core.repository.EpreuveRepositoryImpl;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -18,7 +19,7 @@ public class EpreuveService {
         this.epreuveRepository = new EpreuveRepositoryImpl();
     }
 
-    public Epreuve getEpreuve (Long id) {
+    public Epreuve getEpreuveAvecTournoi (Long id) {
         Session session=null;
         Transaction tx=null;
         Epreuve epreuve=null;
@@ -30,9 +31,37 @@ public class EpreuveService {
             session= HibernateUtil.getSessionFactory().getCurrentSession();
             tx=session.beginTransaction();
             epreuve=epreuveRepository.getById(id);
-            System.out.println("La classe de la propriété tournoi est "+epreuve.getTournoi().getClass().getName());
-            System.out.println("L'dentifiant du tournoi est "+epreuve.getTournoi().getId()); // retourne la valeur de id_tournoi dans la table EPREUVE et non de la valeur id de la table TOURNOI
-            System.out.println("L'épreuve sélectionnée se déroule en "+epreuve.getAnnee()+" et il s'agit du tournoi "+epreuve.getTournoi().getNom());
+            Hibernate.initialize(epreuve.getTournoi()); // cette méthode prend en paramètre l'objet de type proxy qu'on veut charger
+            tx.commit();
+        }
+        catch (Exception e){
+            if(tx!=null) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+        }
+        finally {
+            if(session!=null){
+                session.close();
+            }
+
+        }
+
+        return epreuve;
+    }
+
+    public Epreuve getEpreuveSansTournoi (Long id) {
+        Session session=null;
+        Transaction tx=null;
+        Epreuve epreuve=null;
+        try {
+            /*
+            getCurrentSession() va permettre de réutiliser une session qui sera
+            stocker quelque part ici en l'occurence dans le ThreadLocal
+             */
+            session= HibernateUtil.getSessionFactory().getCurrentSession();
+            tx=session.beginTransaction();
+            epreuve=epreuveRepository.getById(id);
             tx.commit();
         }
         catch (Exception e){
