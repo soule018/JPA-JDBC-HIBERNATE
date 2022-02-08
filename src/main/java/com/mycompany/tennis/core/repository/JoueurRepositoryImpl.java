@@ -21,51 +21,6 @@ public class JoueurRepositoryImpl {
         }
 
 
-    public void update (Joueur joueur) {
-
-        Connection conn = null;
-        try {
-
-            DataSource dataSource = DataSourceProvider.getSingleDataSourceInstance();
-            conn = dataSource.getConnection();
-
-            conn = dataSource.getConnection();
-
-            PreparedStatement preparedStatement = conn.prepareStatement("UPDATE JOUEUR SET NOM=?,PRENOM=?,SEXE=? WHERE ID=?");
-            /*
-            les méthodes set de preparedStatement prennent en 1er paramètre
-            l'index du ? dans la requête sql,
-            ici, on a un seul paramètre,
-            le 2ème paramètre est la valeur qu'on veut donner à ce ?
-             */
-
-            preparedStatement.setString(1, joueur.getNom());
-            preparedStatement.setString(2, joueur.getPrenom());
-            preparedStatement.setString(3, joueur.getSexe().toString());
-            preparedStatement.setLong(4,joueur.getId());
-
-            preparedStatement.executeUpdate();
-
-
-            System.out.println("Joueur modifié");
-        } catch (SQLException e) {
-            e.printStackTrace();
-            try {
-                if (conn != null) conn.rollback();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
-        } finally {
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public void delete (Long id) {
 
         Connection conn = null;

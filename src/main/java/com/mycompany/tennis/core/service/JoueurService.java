@@ -120,4 +120,42 @@ public class JoueurService {
 
         }
     }
+    /*
+   Cette méthode permet de renommer le sexe d'un joueur dejà existant;
+   Pour ce faire, on recupère d'abord le joueur qu'on veut modifier via son id,
+   on utilise donc la méthode getById(), puis on modifie le sexe du joueur via un setSexe;
+    */
+    public void renomme(Long id, Character sexe) {
+        Joueur joueur = getJoueur(id); // joueur qui sert de modèle
+        Session session = null;
+        Transaction tx = null;
+        try {
+            /*
+            getCurrentSession() va permettre de réutiliser une session qui sera
+            stocker quelque part ici en l'occurence dans le ThreadLocal
+             */
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            tx = session.beginTransaction();
+            joueur.setSexe(sexe);
+            /*
+            La méthode merge() va d'abord procéder à un select des informations qui se trouvent en base de donnée relative au joueur ayant le même id,
+            l'id. Cela va conduire à la création d'un nouvel objet qui sera mis en session, qui est persistant,
+            et enfin la méthode merge va modifier (update) toutes les propriétés de l'objet persistant en utilisant les propriété de l'objet
+            non persistant, ce qui va conduire à la fin à un update,
+            On a donc deux objets joueur à ce stade avec le même id, celui qui a servi de modèle et qui est détaché et celui qui est persistant
+             */
+            Joueur joueurPersistant = (Joueur) session.merge(joueur); // joueur persistant
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+
+        }
+    }
 }
