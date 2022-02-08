@@ -1,6 +1,7 @@
 package com.mycompany.tennis.core.service;
 
 import com.mycompany.tennis.core.HibernateUtil;
+import com.mycompany.tennis.core.dto.TournoiDto;
 import com.mycompany.tennis.core.entity.Tournoi;
 import com.mycompany.tennis.core.repository.TournoiRepositoryImpl;
 import org.hibernate.Session;
@@ -25,7 +26,7 @@ public class TournoiService {
     la couche qui est au dessus à la couche qui en dessous (le repository),
     on appelle cela un service passe-plat
      */
-    public void createTournoi(Tournoi tournoi){
+    public void createTournoi(TournoiDto dto){
         Session session=null;
         Transaction tx=null;
         try {
@@ -35,6 +36,10 @@ public class TournoiService {
              */
             session= HibernateUtil.getSessionFactory().getCurrentSession();
             tx=session.beginTransaction();
+            Tournoi tournoi=new Tournoi();
+            tournoi.setNom(dto.getNom());
+            tournoi.setId(dto.getId());
+            tournoi.setCode(dto.getCode());
             tournoiRepository.create(tournoi);
             tx.commit();
         }
@@ -52,10 +57,11 @@ public class TournoiService {
         }
     }
 
-    public Tournoi getTournoi (Long id) {
+    public TournoiDto getTournoi (Long id) {
         Session session=null;
         Transaction tx=null;
         Tournoi tournoi=null;
+        TournoiDto dto=null;
         try {
             /*
             getCurrentSession() va permettre de réutiliser une session qui sera
@@ -64,6 +70,10 @@ public class TournoiService {
             session= HibernateUtil.getSessionFactory().getCurrentSession();
             tx=session.beginTransaction();
             tournoi=tournoiRepository.getById(id);
+            dto=new TournoiDto();
+            dto.setId(tournoi.getId());
+            dto.setNom(tournoi.getNom());
+            dto.setCode(tournoi.getCode());
             tx.commit();
         }
         catch (Exception e){
@@ -79,7 +89,7 @@ public class TournoiService {
 
         }
 
-        return tournoi;
+        return dto;
     }
 
     /*
@@ -88,7 +98,7 @@ public class TournoiService {
    on utilise donc la méthode getById(), puis on modifie le nom du joueur via un setNom;
     */
     public void update(Long id, String nouveauNom){
-        Tournoi tournoi=getTournoi(id); // joueur qui sert de modèle
+        TournoiDto tournoi=getTournoi(id); // joueur qui sert de modèle
         Session session=null;
         Transaction tx=null;
         try {
@@ -128,7 +138,7 @@ public class TournoiService {
     on utilise donc la méthode getById(), puis on modifie le sexe du joueur via un setSexe;
     */
     public void updateByCode(Long id, String code) {
-        Tournoi tournoi = getTournoi(id); // joueur qui sert de modèle
+        TournoiDto tournoi = getTournoi(id); // joueur qui sert de modèle
         Session session = null;
         Transaction tx = null;
         try {

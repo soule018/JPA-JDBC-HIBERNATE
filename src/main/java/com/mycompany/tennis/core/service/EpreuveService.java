@@ -35,8 +35,6 @@ public class EpreuveService {
             session= HibernateUtil.getSessionFactory().getCurrentSession();
             tx=session.beginTransaction();
             epreuve=epreuveRepository.getById(id);
-            Hibernate.initialize(epreuve.getTournoi()); // cette méthode prend en paramètre l'objet de type proxy qu'on veut charger
-            tx.commit();
             dto=new EpreuveFullDto();
             dto.setId(epreuve.getId());
             dto.setAnnee(epreuve.getAnnee());
@@ -46,6 +44,7 @@ public class EpreuveService {
             tournoiDto.setNom(epreuve.getTournoi().getNom());
             tournoiDto.setCode(epreuve.getTournoi().getCode());
             dto.setTournoi(tournoiDto);
+            tx.commit();
         }
         catch (Exception e){
             if(tx!=null) {
