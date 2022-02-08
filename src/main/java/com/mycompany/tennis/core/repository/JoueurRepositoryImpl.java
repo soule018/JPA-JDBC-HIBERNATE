@@ -4,6 +4,7 @@ import com.mycompany.tennis.core.DataSourceProvider;
 import com.mycompany.tennis.core.HibernateUtil;
 import com.mycompany.tennis.core.entity.Joueur;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -14,64 +15,48 @@ public class JoueurRepositoryImpl {
 
     public void create (Joueur joueur){
 
-        Connection conn = null;
+
+        Session session = null;
+        Transaction tx=null;
+
         try {
+            // opensession va nous permettre de recupérer une session fraîche
+            session= HibernateUtil.getSessionFactory().openSession();
+            tx= session.beginTransaction();
+
+             /*
+        Comment demander à Hibernate de créer cet enregistrement ?
+        A l'intérieur de la méthode persist(), on inscrit l'objet qu'on veut créer,
+        ici joueur;
+        La méthode persist() signifie que l'objet passé en paramètre doit être ajouté
+        en session hibernate. Le fait de l'ajouer fait que son état est désormais persistent,
+        tout simplement, on dit qu'il est passé de l'état Transient(càd inconu de la session)
+        à l'état persistent(càd dont la gestion de la persistance est confiée à hibernate.
+        Mais l'action de générer la requête en insert vers la base de donnée ne va pas se faire automatiquement
+        à chaque fois qu'on ajoute un objet en session.Il y a plusieurs mécanismes possibles
+        mais de base, on va pouvoir déclencher manuellement l'insertion grâce à un session.fluch
+                 */
+            session.persist(joueur);
             /*
-            Instanciation de la classe BasicDataSource;
-            Avec l'utilisation de dépendance Commons DBCP, on ne vas plus
-            utiliser la classe MySQL DataSource, on va utiliser une DataSource
-            générique, c'est la classe BasicDataSource de Commons DBCP
+             il s'agit de synchroniser l'état de la session avec la base de donnée, il invoque fluch de façon indirecte;
+             lorsqu'on fait un commit, il faut penser au rollback lorsque tous ne se passe pas bien
              */
-            DataSource dataSource = DataSourceProvider.getSingleDataSourceInstance();
-            conn=dataSource.getConnection();
-
-            conn = dataSource.getConnection();
-
-            PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO JOUEUR (NOM,PRENOM,SEXE) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            /*
-            les méthodes set de preparedStatement prennent en 1er paramètre
-            l'index du ? dans la requête sql,
-            ici, on a un seul paramètre,
-            le 2ème paramètre est la valeur qu'on veut donner à ce ?
-             */
-
-            preparedStatement.setString(1,joueur.getNom());
-            preparedStatement.setString(2, joueur.getPrenom());
-            preparedStatement.setString(3,joueur.getSexe().toString());
-
-            preparedStatement.executeUpdate();
-
-            /*
-            Cette méthode fournit un ResultSet;
-            Il s'agit de toutes les valeurs autogénérées après insertion de l'enregistrement
-             */
-             ResultSet rs=preparedStatement.getGeneratedKeys();
-             //on insert une seule ligne d'où l'utilisation du if
-             if(rs.next()){
-                 rs.getLong(1);
-                 joueur.setId(rs.getLong(1));
-             }
-
-
-
-            System.out.println("Joueur créé");
-        } catch (SQLException e) {
-            e.printStackTrace();
-            try {
-                if(conn!=null) conn.rollback();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
+            tx.commit();
+            System.out.println("Joueur créer");
+        }
+        catch (Exception e){
+            if(tx!=null) {
+                tx.rollback();
             }
+            e.printStackTrace();
         }
         finally {
-            try {
-                if (conn!=null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            if(session!=null){
+                session.close();
             }
+
         }
+
     }
 
 
