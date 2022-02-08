@@ -22,44 +22,10 @@ public class JoueurRepositoryImpl {
 
 
     public void delete (Long id) {
-
-        Connection conn = null;
-        try {
-
-            DataSource dataSource = DataSourceProvider.getSingleDataSourceInstance();
-            conn = dataSource.getConnection();
-
-            conn = dataSource.getConnection();
-
-            PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM JOUEUR WHERE ID=?");
-            /*
-            les méthodes set de preparedStatement prennent en 1er paramètre
-            l'index du ? dans la requête sql,
-            ici, on a un seul paramètre,
-            le 2ème paramètre est la valeur qu'on veut donner à ce ?
-             */
-            preparedStatement.setLong(1,id);
-
-            preparedStatement.executeUpdate();
-
-
-            System.out.println("Joueur supprimé");
-        } catch (SQLException e) {
-            e.printStackTrace();
-            try {
-                if (conn != null) conn.rollback();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
-        } finally {
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        Joueur joueur=getById(id);
+        Session session=HibernateUtil.getSessionFactory().getCurrentSession();
+        session.delete(joueur);
+        System.out.println("Joueur supprimé");
     }
 
     public Joueur getById (Long id) {
