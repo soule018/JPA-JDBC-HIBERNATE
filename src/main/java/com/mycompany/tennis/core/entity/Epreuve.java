@@ -13,16 +13,17 @@ public class Epreuve {
     @Type(type="short")  //permet d'indiquer le type de la variable dans la base de donnée
     private Short annee;
 
-    @ManyToOne
-    @JoinColumn(name="ID_TOURNOI") // car chez Hibernate la clé étrangère est TOURNOI_ID
+    /*
+   Plusieurs épreuves peuvent être associées à un seul tournoi,
+   donc on a une relation plusieurs à un : many to one;
+   En effet, dans notre base de donnée pour chaque tournoi, nous avions deux epreuves par an :
+   une epreuve homme et une epreuve femme.
+   La valeur par défaut de ManyToOne est FetchType.EAGER
+    */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="ID_TOURNOI") // car Hibernate trouve comme clé étrangère TOURNOI_ID
     private Tournoi tournoi;
 
-    /*
-    Plusieurs epreuves peuvent être associées à un seul tournoi,
-    donc on a une relation plusieurs à un : many to one;
-    En effet, dans notre base de donnée pour chaque tournoi, nous avions deux epreuves par an :
-    une epreuve homme et une epreuve femme
-     */
     @Column(name ="TYPE_EPREUVE")
     private Character typeEpreuve;
 

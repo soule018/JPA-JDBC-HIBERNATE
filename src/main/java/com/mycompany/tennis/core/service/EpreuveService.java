@@ -30,6 +30,7 @@ public class EpreuveService {
             session= HibernateUtil.getSessionFactory().getCurrentSession();
             tx=session.beginTransaction();
             epreuve=epreuveRepository.getById(id);
+            System.out.println("L'épreuve sélectionnée se déroule en "+epreuve.getAnnee()+" et il s'agit du tournoi "+epreuve.getTournoi().getNom());
             tx.commit();
         }
         catch (Exception e){
