@@ -30,7 +30,7 @@ public class Cours {
         match.setVainqueur(vainqueur);
         match.setFinaliste(finaliste);
         match.setEpreuve(epreuve);
-        matchService.enregisterNouveauMatch(match);
+        //matchService.enregisterNouveauMatch(match);
 
         /*JoueurService joueurService=new JoueurService();
 
