@@ -1,7 +1,10 @@
 package com.mycompany.tennis.core.service;
 
+import com.mycompany.tennis.core.HibernateUtil;
 import com.mycompany.tennis.core.entity.Joueur;
 import com.mycompany.tennis.core.repository.JoueurRepositoryImpl;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 public class JoueurService {
     /*
@@ -21,15 +24,92 @@ public class JoueurService {
     on appelle cela un service passe-plat
      */
     public void createJoueur(Joueur joueur){
-        joueurRepository.create(joueur);
+        Session session=null;
+        Transaction tx=null;
+        try {
+            /*
+            getCurrentSession() va permettre de réutiliser une session qui sera
+            stocker quelque part ici en l'occurence dans le ThreadLocal
+             */
+            session= HibernateUtil.getSessionFactory().getCurrentSession();
+            tx=session.beginTransaction();
+            joueurRepository.create(joueur);
+            tx.commit();
+        }
+        catch (Exception e){
+            if(tx!=null) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+        }
+        finally {
+            if(session!=null){
+                session.close();
+            }
 
+        }
     }
 
     public Joueur getJoueur (Long id) {
+        Session session=null;
+        Transaction tx=null;
+        Joueur joueur=null;
+        try {
+            /*
+            getCurrentSession() va permettre de réutiliser une session qui sera
+            stocker quelque part ici en l'occurence dans le ThreadLocal
+             */
+            session= HibernateUtil.getSessionFactory().getCurrentSession();
+            tx=session.beginTransaction();
+            joueur=joueurRepository.getById(id);
+            tx.commit();
+        }
+        catch (Exception e){
+            if(tx!=null) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+        }
+        finally {
+            if(session!=null){
+                session.close();
+            }
 
-        return joueurRepository.getById(id);
+        }
+
+        return joueur;
     }
+
+    /*
+   Cette méthode permet de renommer un joueur dejà existant;
+   Pour ce faire, on recupère d'abord le joueur qu'on veut modifier via son id,
+   on utilise donc la méthode getById(), puis on modifie le nom du joueur via un setNom;
+    */
     public void renomme(Long id, String nouveauNom){
-        joueurRepository.renomme(id, nouveauNom);
+        Session session=null;
+        Transaction tx=null;
+        try {
+            /*
+            getCurrentSession() va permettre de réutiliser une session qui sera
+            stocker quelque part ici en l'occurence dans le ThreadLocal
+             */
+            session= HibernateUtil.getSessionFactory().getCurrentSession();
+            tx=session.beginTransaction();
+            Joueur joueur=joueurRepository.getById(id);
+            joueur.setNom(nouveauNom);
+            tx.commit();
+        }
+        catch (Exception e){
+            if(tx!=null) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+        }
+        finally {
+            if(session!=null){
+                session.close();
+            }
+
+        }
     }
 }

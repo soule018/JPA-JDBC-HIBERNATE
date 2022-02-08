@@ -12,86 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JoueurRepositoryImpl {
-    /*
-    Cette méthode permet de renommer un joueur dejà existant;
-    Pour ce faire, on recupère d'abord le joueur qu'on veut modifier via son id,
-    cela revient à utiliser la méthode getById(),
-    En plus de cela, on va modifier la propriété de cet objet persistant;
-    Comme pour l'insertion, il va falloir de plus utilier le fluch pour synchroniser
-    l'information avec notre base de donnée, on va déclencher le fluch au commit,donc créer une transaction
-     */
-    public void renomme(Long id,String nouveauNom){
-        Joueur joueur=null;
-        Session session = null;
-        Transaction tx=null;
-        try {
-            // opensession va nous permettre de recupérer une session fraîche
-            session= HibernateUtil.getSessionFactory().openSession();
-            tx= session.beginTransaction();
-            joueur=session.get(Joueur.class,id);
-            joueur.setNom(nouveauNom);
-            tx.commit();
 
-            System.out.println("nom du joueur modifié");
-        }
-        catch (Exception e){
-            if(tx!=null) {
-                tx.rollback();
-            }
-            e.printStackTrace();
-        }
-        finally {
-            if(session!=null){
-                session.close();
-            }
-        }
-    }
 
     public void create (Joueur joueur){
-
-
-        Session session = null;
-        Transaction tx=null;
-
-        try {
-            // opensession va nous permettre de recupérer une session fraîche
-            session= HibernateUtil.getSessionFactory().openSession();
-            tx= session.beginTransaction();
-
-             /*
-        Comment demander à Hibernate de créer cet enregistrement ? En utilisant la méthode session.persist();
-        A l'intérieur de la méthode persist(), on inscrit l'objet qu'on veut créer,
-        ici joueur;
-        La méthode persist() signifie que l'objet passé en paramètre doit être ajouté
-        en session hibernate. Le fait de l'ajouer fait que son état est désormais persistent,
-        tout simplement, on dit qu'il est passé de l'état Transient(càd inconu de la session)
-        à l'état persistent(càd dont la gestion de la persistance est confiée à hibernate.
-        Mais l'action de générer la requête en insert vers la base de donnée ne va pas se faire automatiquement
-        à chaque fois qu'on ajoute un objet en session.Il y a plusieurs mécanismes possibles
-        mais de base, on va pouvoir déclencher manuellement l'insertion grâce à un session.fluch
-                 */
-            session.persist(joueur);
-            /*
-             il s'agit de synchroniser l'état de la session avec la base de donnée, il invoque fluch de façon indirecte;
-             lorsqu'on fait un commit, il faut penser au rollback lorsque tous ne se passe pas bien
-             */
-            tx.commit();
-            System.out.println("Joueur créer");
+        Session session= HibernateUtil.getSessionFactory().getCurrentSession();
+        session.persist(joueur);
+        System.out.println("Joueur créé");
         }
-        catch (Exception e){
-            if(tx!=null) {
-                tx.rollback();
-            }
-            e.printStackTrace();
-        }
-        finally {
-            if(session!=null){
-                session.close();
-            }
-
-        }
-
-    }
 
 
     public void update (Joueur joueur) {
@@ -181,42 +108,12 @@ public class JoueurRepositoryImpl {
     }
 
     public Joueur getById (Long id) {
-
         Joueur joueur=null;
         Session session = null;
-        try {
-            // opensession va nous permettre de recupérer une session fraîche
-             session= HibernateUtil.getSessionFactory().openSession();
+        session= HibernateUtil.getSessionFactory().getCurrentSession();
+        joueur=session.get(Joueur.class,id);
 
-             /*
-             C'est à partir de l'objet session qu'on va pouvoir faire du create,update,delete,read
-             Pour récupérer une ligne particulière dans la base de donnée et en faire
-             un objet,on utlise la méthode get de session,
-             Il prendra en argument d'abord le type d'objet qu'on veut fabriquer et en deuxième argument
-             l'identifiant unique de l'objet en particulier qu'on veut créer, sous-entendu de la ligne
-             qu'on veut recupérer à partir de la table associé à cette table joueur;
-             On aura pas à écrire la requête sql qui lui va bien, on aura pas à récupérer du resulSet,
-             On aura pas à instancier nous-même la classe joueur et à associer à toutes ses propriétés les valeurs
-             issues des colonnes des tables, non, hibernate fait cela pour nous
-              */
-            joueur=session.get(Joueur.class,id);
-
-
-
-            System.out.println("Joueur lu");
-        }
-        catch (Throwable t){
-            t.printStackTrace();
-        }
-        finally {
-            if(session!=null){
-                session.close();
-            }
-
-
-
-
-        }
+        System.out.println("Joueur lu");
         return joueur;
     }
 
