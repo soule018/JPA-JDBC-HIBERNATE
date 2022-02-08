@@ -28,7 +28,8 @@ public class JoueurService {
     public Joueur getJoueur (Long id) {
 
         return joueurRepository.getById(id);
-
-
+    }
+    public void renomme(Long id, String nouveauNom){
+        joueurRepository.renomme(id, nouveauNom);
     }
 }

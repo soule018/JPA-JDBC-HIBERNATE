@@ -12,6 +12,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JoueurRepositoryImpl {
+    /*
+    Cette méthode permet de renommer un joueur dejà existant;
+    Pour ce faire, on recupère d'abord le joueur qu'on veut modifier via son id,
+    cela revient à utiliser la méthode getById(),
+    En plus de cela, on va modifier la propriété de cet objet persistant;
+    Comme pour l'insertion, il va falloir de plus utilier le fluch pour synchroniser
+    l'information avec notre base de donnée, on va déclencher le fluch au commit,donc créer une transaction
+     */
+    public void renomme(Long id,String nouveauNom){
+        Joueur joueur=null;
+        Session session = null;
+        Transaction tx=null;
+        try {
+            // opensession va nous permettre de recupérer une session fraîche
+            session= HibernateUtil.getSessionFactory().openSession();
+            tx= session.beginTransaction();
+            joueur=session.get(Joueur.class,id);
+            joueur.setNom(nouveauNom);
+            tx.commit();
+
+            System.out.println("nom du joueur modifié");
+        }
+        catch (Exception e){
+            if(tx!=null) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+        }
+        finally {
+            if(session!=null){
+                session.close();
+            }
+        }
+    }
 
     public void create (Joueur joueur){
 
@@ -25,7 +59,7 @@ public class JoueurRepositoryImpl {
             tx= session.beginTransaction();
 
              /*
-        Comment demander à Hibernate de créer cet enregistrement ?
+        Comment demander à Hibernate de créer cet enregistrement ? En utilisant la méthode session.persist();
         A l'intérieur de la méthode persist(), on inscrit l'objet qu'on veut créer,
         ici joueur;
         La méthode persist() signifie que l'objet passé en paramètre doit être ajouté
