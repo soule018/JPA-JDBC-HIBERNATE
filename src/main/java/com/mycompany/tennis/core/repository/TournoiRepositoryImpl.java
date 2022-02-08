@@ -1,7 +1,9 @@
 package com.mycompany.tennis.core.repository;
 
 import com.mycompany.tennis.core.DataSourceProvider;
+import com.mycompany.tennis.core.HibernateUtil;
 import com.mycompany.tennis.core.entity.Tournoi;
+import org.hibernate.Session;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -163,51 +165,34 @@ public class TournoiRepositoryImpl {
      */
     public Tournoi getById (Long id) {
 
-        Connection conn = null;
         Tournoi tournoi =null;
+        Session session = null;
         try {
+            // opensession va nous permettre de recupérer une session fraîche
+            session= HibernateUtil.getSessionFactory().openSession();
 
-            DataSource dataSource = DataSourceProvider.getSingleDataSourceInstance();
-            conn = dataSource.getConnection();
-
-            conn = dataSource.getConnection();
-
-            PreparedStatement preparedStatement = conn.prepareStatement("SELECT NOM,CODE FROM TOURNOI WHERE ID=?");
-            /*
-            les méthodes set de preparedStatement prennent en 1er paramètre
-            l'index du ? dans la requête sql,
-            ici, on a un seul paramètre,
-            le 2ème paramètre est la valeur qu'on veut donner à ce ?
-             */
-            preparedStatement.setLong(1,id);
-
-            ResultSet rs =preparedStatement.executeQuery();
-
-            if(rs.next()){
-                tournoi=new Tournoi();
-                tournoi.setId(id);
-                tournoi.setNom(rs.getString("NOM"));
-                tournoi.setCode(rs.getString("CODE"));
-
-            }
-
-
+             /*
+             C'est à partir de l'objet session qu'on va pouvoir faire du create,update,delete,read
+             Pour récupérer une ligne particulière dans la base de donnée et en faire
+             un objet,on utlise la méthode get de session,
+             Il prendra en argument d'abord le type d'objet qu'on veut fabriquer et en deuxième argument
+             l'identifiant unique de l'objet en particulier qu'on veut créer, sous-entendu de la ligne
+             qu'on veut recupérer à partir de la table associé à cette table joueur;
+             On aura pas à écrire la requête sql qui lui va bien, on aura pas à récupérer du resulSet,
+             On aura pas à instancier nous-même la classe joueur et à associer à toutes ses propriétés les valeurs
+             issues des colonnes des tables, non, hibernate fait cela pour nous
+              */
+            tournoi=session.get(Tournoi.class,id);
             System.out.println("Tournoi lu");
-        } catch (SQLException e) {
-            e.printStackTrace();
-            try {
-                if (conn != null) conn.rollback();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
+        }
+        catch (Throwable t){
+            t.printStackTrace();
+        }
+        finally {
+            if(session!=null){
+                session.close();
             }
-        } finally {
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+
         }
         return tournoi;
     }
