@@ -6,7 +6,6 @@ import com.mycompany.tennis.core.dto.EpreuveLightDto;
 import com.mycompany.tennis.core.dto.TournoiDto;
 import com.mycompany.tennis.core.entity.Epreuve;
 import com.mycompany.tennis.core.repository.EpreuveRepositoryImpl;
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
