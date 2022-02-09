@@ -15,7 +15,8 @@ public class Match {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="ID_FINALISTE")
     private Joueur finaliste;
-    @Transient
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name ="ID_EPREUVE")
     private Epreuve epreuve;
     /*
     Comment faire le lien entre match et Score ?
