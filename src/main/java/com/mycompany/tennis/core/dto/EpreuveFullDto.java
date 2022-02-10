@@ -7,12 +7,23 @@ package com.mycompany.tennis.core.dto;
 La classe EpreuveFullDto ne doit pas avoir accès à des objets de type entité
  */
 
+import java.util.Set;
+
 public class EpreuveFullDto {
 
     private Long id;
     private Short annee;
     private TournoiDto tournoi;
     private Character typeEpreuve;
+    private Set<JoueurDto> participants;
+
+    public Set<JoueurDto> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(Set<JoueurDto> participants) {
+        this.participants = participants;
+    }
 
     public Long getId() {
         return id;

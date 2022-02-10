@@ -3,6 +3,7 @@ package com.mycompany.tennis.core.entity;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name="EPREUVE")
@@ -26,6 +27,28 @@ public class Epreuve {
 
     @Column(name ="TYPE_EPREUVE")
     private Character typeEpreuve;
+
+    /*
+    Cette propriété correspond à la table de jointure PARTICIPANT;
+    L'annotation ManyToMany va avoir besoin de la définition de la table de jointure,
+    on va utiliser donc une autre annotation @JoinTable,
+    cette annotation va prendre plusieurs paramètres
+     */
+    @ManyToMany
+    @JoinTable (
+            name="PARTICIPANTS",
+            joinColumns = {@JoinColumn(name="ID_EPREUVE")},
+            inverseJoinColumns = {@JoinColumn(name="ID_JOUEUR")}
+    )
+    private Set<Joueur> participants;
+
+    public Set<Joueur> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(Set<Joueur> participants) {
+        this.participants = participants;
+    }
 
     public Long getId() {
         return id;
