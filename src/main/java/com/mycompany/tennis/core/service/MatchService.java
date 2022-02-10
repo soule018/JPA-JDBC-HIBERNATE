@@ -2,10 +2,7 @@ package com.mycompany.tennis.core.service;
 
 
 import com.mycompany.tennis.core.HibernateUtil;
-import com.mycompany.tennis.core.dto.EpreuveFullDto;
-import com.mycompany.tennis.core.dto.JoueurDto;
-import com.mycompany.tennis.core.dto.MatchDto;
-import com.mycompany.tennis.core.dto.TournoiDto;
+import com.mycompany.tennis.core.dto.*;
 import com.mycompany.tennis.core.entity.Match;
 import com.mycompany.tennis.core.repository.MatchRepositoryImpl;
 import org.hibernate.Session;
@@ -66,6 +63,16 @@ public class MatchService {
             epreuveDto.setTournoi(tournoiDto);
 
             dto.setEpreuve(epreuveDto);
+
+            ScoreFullDto scoreDto=new ScoreFullDto();
+            scoreDto.setId(match.getScore().getId());
+            scoreDto.setSet1(match.getScore().getSet1());
+            scoreDto.setSet2(match.getScore().getSet2());
+            scoreDto.setSet3(match.getScore().getSet3());
+            scoreDto.setSet4(match.getScore().getSet4());
+            scoreDto.setSet5(match.getScore().getSet5());
+            dto.setScore(scoreDto);
+            scoreDto.setMatch(dto); // la relation est bidirectionnelle entre score et match
             tx.commit();
         }
         catch (Exception e){

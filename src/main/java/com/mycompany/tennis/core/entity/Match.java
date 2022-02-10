@@ -24,9 +24,12 @@ public class Match {
     ou est ce que je crée une variable de type score dans la classe match ?
     PLus concrètement,est ce qu'en connaissant le match, je dois pouvoir connaître le score ?
     ou est ce qu'en connaissant le score, je dois pouvoir connaître le match ?
-    je peux même m'autoriser les deux relations si je le souhaite (appelée relation bi-directionnelle)
+    je peux même m'autoriser les deux relations si je le souhaite (appelée relation bi-directionnelle);
+    On doit ajouter à la propriété de OneToOne, un attribut mappedBy, qui va permettre d'indiquer quelle
+    est la propriété de l'autre côte de la relation qui définit cette association,
+    Ce fonctionnement avec mappedBy marche quelque soit la relation bidirectionnelle
      */
-    @Transient
+    @OneToOne(mappedBy ="match" )
     private Score score;
 
     public Score getScore() {
