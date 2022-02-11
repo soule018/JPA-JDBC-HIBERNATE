@@ -29,7 +29,7 @@ public class Match {
     est la propriété de l'autre côte de la relation qui définit cette association,
     Ce fonctionnement avec mappedBy marche quelque soit la relation bidirectionnelle
      */
-    @OneToOne(mappedBy ="match" )
+    @OneToOne(mappedBy ="match", fetch = FetchType.LAZY)
     private Score score;
 
     public Score getScore() {

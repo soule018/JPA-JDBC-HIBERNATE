@@ -5,6 +5,7 @@ import com.mycompany.tennis.core.dto.EpreuveFullDto;
 import com.mycompany.tennis.core.dto.MatchDto;
 import com.mycompany.tennis.core.dto.ScoreFullDto;
 import com.mycompany.tennis.core.dto.TournoiDto;
+import com.mycompany.tennis.core.entity.Match;
 import com.mycompany.tennis.core.entity.Score;
 import com.mycompany.tennis.core.repository.ScoreRepositoryImpl;
 import org.hibernate.Session;
@@ -72,6 +73,7 @@ public class ScoreService {
 
         return dto;
     }
+
 
 
 }

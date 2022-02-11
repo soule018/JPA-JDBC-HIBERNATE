@@ -14,7 +14,7 @@ public class MatchRepositoryImpl {
 
         Session session= HibernateUtil.getSessionFactory().getCurrentSession();
         session.persist(match);
-        System.out.println("Match créé");
+        System.out.println("Match ajouté");
     }
 
     public Match getById (Long id) {

@@ -5,6 +5,9 @@ import com.mycompany.tennis.core.HibernateUtil;
 import com.mycompany.tennis.core.dto.*;
 import com.mycompany.tennis.core.entity.Joueur;
 import com.mycompany.tennis.core.entity.Match;
+import com.mycompany.tennis.core.entity.Score;
+import com.mycompany.tennis.core.repository.EpreuveRepositoryImpl;
+import com.mycompany.tennis.core.repository.JoueurRepositoryImpl;
 import com.mycompany.tennis.core.repository.MatchRepositoryImpl;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -16,10 +19,14 @@ public class MatchService {
      et une propriété de type MatchRepositortImpl
       */
     private MatchRepositoryImpl matchRepository;
+    private EpreuveRepositoryImpl epreuveRepository;
+    private JoueurRepositoryImpl joueurRepository;
 
 
     public MatchService() {
         this.matchRepository=new MatchRepositoryImpl();
+        this.epreuveRepository=new EpreuveRepositoryImpl();
+        this.joueurRepository=new JoueurRepositoryImpl();
 
     }
 
@@ -109,13 +116,72 @@ public class MatchService {
             Joueur ancienVainqueur=match.getVainqueur();
             match.setVainqueur(match.getFinaliste());
             match.setFinaliste(ancienVainqueur);
-            
+
 
             match.getScore().setSet1((byte)0);
             match.getScore().setSet2((byte)0);
             match.getScore().setSet3((byte)0);
             match.getScore().setSet4((byte)0);
             match.getScore().setSet5((byte)0);
+            tx.commit();
+        }
+        catch (Exception e){
+            if(tx!=null) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+        }
+        finally {
+            if(session!=null){
+                session.close();
+            }
+
+        }
+
+    }
+
+    public void createMatch(MatchDto dto){
+        Session session = null;
+        Transaction tx = null;
+        Match match = null;
+
+        try {
+            /*
+            getCurrentSession() va permettre de réutiliser une session qui sera
+            stocker quelque part ici en l'occurence dans le ThreadLocal
+             */
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            tx = session.beginTransaction();
+            match=new Match();
+            match.setEpreuve(epreuveRepository.getById(dto.getEpreuve().getId()));
+            match.setVainqueur(joueurRepository.getById(dto.getVainqueur().getId()));
+            match.setFinaliste(joueurRepository.getById(dto.getFinaliste().getId()));
+
+            Score score=new Score();
+            score.setMatch(match);
+            match.setScore(score); // relation bidirectionnelle
+            score.setSet1(dto.getScore().getSet1());
+            score.setSet2(dto.getScore().getSet2());
+            score.setSet3(dto.getScore().getSet3());
+            score.setSet4(dto.getScore().getSet4());
+            score.setSet5(dto.getScore().getSet5());
+
+            matchRepository.create(match);
+
+            /*ScoreFullDto scoreFullDto = new ScoreFullDto();
+            scoreFullDto.setSet1(dto.getScore().getSet1());
+            scoreFullDto.setSet2(dto.getScore().getSet2());
+            scoreFullDto.setSet3(dto.getScore().getSet3());
+            scoreFullDto.setSet4(dto.getScore().getSet4());
+            scoreFullDto.setSet5(dto.getScore().getSet5());*/
+           /*
+            match.getScore().setSet1(dto.getScore().getSet1());
+            match.getScore().setSet2(dto.getScore().getSet2());
+            match.getScore().setSet3(dto.getScore().getSet3());
+            match.getScore().setSet4(dto.getScore().getSet4());
+            match.getScore().setSet5(dto.getScore().getSet5());*/
+
+
             tx.commit();
         }
         catch (Exception e){
