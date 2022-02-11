@@ -6,6 +6,7 @@ import javax.persistence.*;
 @Table(name="SCORE_VAINQUEUR")
 public class Score {
     @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
     @Column(name="SET_1")
     private Byte set1;

@@ -138,7 +138,36 @@ public class MatchService {
 
         }
 
+
     }
+
+    public void deleteMatch(Long id){
+        Session session = null;
+        Transaction tx = null;
+
+        try {
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            tx = session.beginTransaction();
+
+            matchRepository.delete(id);
+            tx.commit();
+        }
+        catch (Exception e){
+            if(tx!=null) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+        }
+        finally {
+            if(session!=null){
+                session.close();
+            }
+
+        }
+
+    }
+
+
 
     public void createMatch(MatchDto dto){
         Session session = null;
@@ -146,12 +175,10 @@ public class MatchService {
         Match match = null;
 
         try {
-            /*
-            getCurrentSession() va permettre de réutiliser une session qui sera
-            stocker quelque part ici en l'occurence dans le ThreadLocal
-             */
+
             session = HibernateUtil.getSessionFactory().getCurrentSession();
             tx = session.beginTransaction();
+
             match=new Match();
             match.setEpreuve(epreuveRepository.getById(dto.getEpreuve().getId()));
             match.setVainqueur(joueurRepository.getById(dto.getVainqueur().getId()));
