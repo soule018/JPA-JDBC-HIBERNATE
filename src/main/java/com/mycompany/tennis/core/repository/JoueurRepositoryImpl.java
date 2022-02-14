@@ -55,7 +55,7 @@ public class JoueurRepositoryImpl {
         associées aux propriétés de la classe Joueur, donc il va pouvoir facilement convertir cela en requête sql
 
          */
-        Query<Joueur> query = session.createQuery("select j from Joueur j where j.sexe=?0", Joueur.class);
+        Query<Joueur> query = session.createNamedQuery("given_sexe", Joueur.class);
         query.setParameter(0,sexe);
         // A partir de ce query, on va pouvoir retourner le résultat de l'exécution de la query via un query.getResultList
         List<Joueur> joueurs = query.getResultList();

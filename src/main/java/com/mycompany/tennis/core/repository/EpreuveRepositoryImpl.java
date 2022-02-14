@@ -33,7 +33,7 @@ public class EpreuveRepositoryImpl {
 
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 
-        //join fetch fonctionne avec tous type d'association 
+        //join fetch fonctionne avec tous type d'association
         Query<Epreuve> query = session.createQuery("select e from Epreuve e join fetch e.tournoi where e.tournoi.code=?0", Epreuve.class);
         query.setParameter(0,codeTournoi);
         // A partir de ce query, on va pouvoir retourner le résultat de l'exécution de la query via un query.getResultList
