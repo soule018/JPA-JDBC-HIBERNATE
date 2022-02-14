@@ -62,8 +62,8 @@ public class JoueurRepositoryImpl {
         System.out.println("joueurs lus");
         return joueurs;
 
-
     }
+
 
 }
 

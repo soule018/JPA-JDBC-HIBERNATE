@@ -11,7 +11,9 @@ import com.mycompany.tennis.core.repository.EpreuveRepositoryImpl;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 public class EpreuveService {
     /*
@@ -108,6 +110,46 @@ public class EpreuveService {
         }
 
         return dto;
+    }
+
+    public List<EpreuveFullDto> getListEpreuve(String codeTournoi){
+        Session session = null;
+        Transaction tx = null;
+        List <EpreuveFullDto> dtos=new ArrayList<>();
+        try {
+            /*
+            getCurrentSession() va permettre de réutiliser une session qui sera
+            stocker quelque part ici en l'occurence dans le ThreadLocal
+             */
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            tx = session.beginTransaction();
+            List<Epreuve> listEpreuve=epreuveRepository.list(codeTournoi);
+            for(Epreuve epreuve : listEpreuve){
+                final EpreuveFullDto dto=new EpreuveFullDto();
+                dto.setId(epreuve.getId());
+                dto.setAnnee(epreuve.getAnnee());
+                dto.setTypeEpreuve(epreuve.getTypeEpreuve());
+                TournoiDto tournoiDto=new TournoiDto();
+                tournoiDto.setId(epreuve.getTournoi().getId());
+                tournoiDto.setNom(epreuve.getTournoi().getNom());
+                tournoiDto.setCode(epreuve.getTournoi().getCode());
+                dto.setTournoi(tournoiDto);
+                dtos.add(dto);
+
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+
+        }
+        return dtos;
     }
 
 }

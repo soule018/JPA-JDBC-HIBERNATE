@@ -3,7 +3,10 @@ package com.mycompany.tennis.core.repository;
 
 import com.mycompany.tennis.core.HibernateUtil;
 import com.mycompany.tennis.core.entity.Epreuve;
+import com.mycompany.tennis.core.entity.Joueur;
+import com.mycompany.tennis.core.entity.Tournoi;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -24,6 +27,19 @@ public class EpreuveRepositoryImpl {
 
         System.out.println("Epreuve lue");
         return epreuve;
+    }
+
+    public List<Epreuve> list (String codeTournoi) {
+
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+
+        Query<Epreuve> query = session.createQuery("select e from Epreuve e where e.tournoi.code=?0", Epreuve.class);
+        query.setParameter(0,codeTournoi);
+        // A partir de ce query, on va pouvoir retourner le résultat de l'exécution de la query via un query.getResultList
+        List<Epreuve> epreuves = query.getResultList();
+        System.out.println("Epreuve lus");
+        return epreuves;
+
     }
 
 
