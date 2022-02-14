@@ -33,15 +33,18 @@ public class TournoiService {
     on appelle cela un service passe-plat
      */
     public void createTournoi(TournoiDto dto){
-        Session session=null;
-        Transaction tx=null;
+        //Session session=null;
+        EntityManager em=null;
+        EntityTransaction tx=null;
         try {
             /*
             getCurrentSession() va permettre de réutiliser une session qui sera
             stocker quelque part ici en l'occurence dans le ThreadLocal
              */
-            session= HibernateUtil.getSessionFactory().getCurrentSession();
-            tx=session.beginTransaction();
+            //session= HibernateUtil.getSessionFactory().getCurrentSession();
+            em=new EntityManagerHolder().getCurrentEntityManager();
+            tx=em.getTransaction();
+            tx.begin();
             Tournoi tournoi=new Tournoi();
             tournoi.setNom(dto.getNom());
             tournoi.setId(dto.getId());
@@ -56,8 +59,8 @@ public class TournoiService {
             e.printStackTrace();
         }
         finally {
-            if(session!=null){
-                session.close();
+            if(em!=null){
+                em.close();
             }
 
         }

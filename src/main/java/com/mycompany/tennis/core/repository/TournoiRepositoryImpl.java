@@ -17,8 +17,9 @@ import java.util.List;
 public class TournoiRepositoryImpl {
 
     public void create (Tournoi tournoi){
-            Session session= HibernateUtil.getSessionFactory().getCurrentSession();
-            session.persist(tournoi);
+            //Session session= HibernateUtil.getSessionFactory().getCurrentSession();
+            EntityManager em= EntityManagerHolder.getCurrentEntityManager();
+            em.persist(tournoi);
             System.out.println("Tournoi créé");
         }
 
