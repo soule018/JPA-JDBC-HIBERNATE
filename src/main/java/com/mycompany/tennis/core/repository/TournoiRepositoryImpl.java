@@ -27,8 +27,9 @@ public class TournoiRepositoryImpl {
     public void delete (Long id) {
 
         Tournoi tournoi=getById(id);
-        Session session=HibernateUtil.getSessionFactory().getCurrentSession();
-        session.delete(tournoi);
+        //Session session= HibernateUtil.getSessionFactory().getCurrentSession();
+        EntityManager em= EntityManagerHolder.getCurrentEntityManager();
+        em.remove(tournoi);
         System.out.println("Tournoi supprimé");
     }
 

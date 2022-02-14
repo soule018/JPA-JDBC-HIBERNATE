@@ -173,15 +173,18 @@ public class TournoiService {
     }
 
     public  void deleteTournoi (Long id){
-        Session session = null;
-        Transaction tx = null;
+        //Session session = null;
+        EntityManager em=null;
+        EntityTransaction tx=null;
         try {
             /*
             getCurrentSession() va permettre de réutiliser une session qui sera
             stocker quelque part ici en l'occurence dans le ThreadLocal
              */
-            session = HibernateUtil.getSessionFactory().getCurrentSession();
-            tx = session.beginTransaction();
+            //session= HibernateUtil.getSessionFactory().getCurrentSession();
+            em=new EntityManagerHolder().getCurrentEntityManager();
+            tx=em.getTransaction();
+            tx.begin();
             tournoiRepository.delete(id);
             tx.commit();
         } catch (Exception e) {
@@ -190,8 +193,8 @@ public class TournoiService {
             }
             e.printStackTrace();
         } finally {
-            if (session != null) {
-                session.close();
+            if (em != null) {
+                em.close();
             }
 
         }
