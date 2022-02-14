@@ -1,12 +1,14 @@
 package com.mycompany.tennis.core.repository;
 
 import com.mycompany.tennis.core.DataSourceProvider;
+import com.mycompany.tennis.core.EntityManagerHolder;
 import com.mycompany.tennis.core.HibernateUtil;
 import com.mycompany.tennis.core.entity.Joueur;
 import com.mycompany.tennis.core.entity.Tournoi;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
@@ -33,11 +35,10 @@ public class TournoiRepositoryImpl {
     retourne un tournoi en fonction de son identifiant
      */
     public Tournoi getById (Long id) {
-
+        EntityManager em= EntityManagerHolder.getCurrentEntityManager();
         Tournoi tournoi=null;
-        Session session = null;
-        session= HibernateUtil.getSessionFactory().getCurrentSession();
-        tournoi=session.get(Tournoi.class,id);
+        //Session session= HibernateUtil.getSessionFactory().getCurrentSession();
+        tournoi=em.find(Tournoi.class,id);
 
         System.out.println("Tournoi lu");
         return tournoi;
