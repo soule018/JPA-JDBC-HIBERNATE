@@ -1,14 +1,9 @@
 package com.mycompany.tennis.core.repository;
 
-import com.mycompany.tennis.core.DataSourceProvider;
 import com.mycompany.tennis.core.HibernateUtil;
 import com.mycompany.tennis.core.entity.Joueur;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
-
-import javax.sql.DataSource;
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class JoueurRepositoryImpl {

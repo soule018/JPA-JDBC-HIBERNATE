@@ -3,17 +3,9 @@ package com.mycompany.tennis.core.repository;
 
 import com.mycompany.tennis.core.HibernateUtil;
 import com.mycompany.tennis.core.entity.Epreuve;
-import com.mycompany.tennis.core.entity.Joueur;
-import com.mycompany.tennis.core.entity.Tournoi;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class EpreuveRepositoryImpl {

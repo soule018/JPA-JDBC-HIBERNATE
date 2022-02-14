@@ -1,11 +1,17 @@
 package com.mycompany.tennis.core.service;
 
+import com.mycompany.tennis.core.EntityManagerHolder;
 import com.mycompany.tennis.core.HibernateUtil;
 import com.mycompany.tennis.core.dto.TournoiDto;
 import com.mycompany.tennis.core.entity.Tournoi;
 import com.mycompany.tennis.core.repository.TournoiRepositoryImpl;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
 
 
 public class TournoiService {
@@ -58,17 +64,16 @@ public class TournoiService {
     }
 
     public TournoiDto getTournoi (Long id) {
-        Session session=null;
-        Transaction tx=null;
+        //Session session=null;
+        EntityManager em=null;
+        EntityTransaction tx=null;
         Tournoi tournoi=null;
         TournoiDto dto=null;
         try {
-            /*
-            getCurrentSession() va permettre de réutiliser une session qui sera
-            stocker quelque part ici en l'occurence dans le ThreadLocal
-             */
-            session= HibernateUtil.getSessionFactory().getCurrentSession();
-            tx=session.beginTransaction();
+            //session= HibernateUtil.getSessionFactory().getCurrentSession();
+            em=new EntityManagerHolder().getCurrentEntityManager();
+            tx=em.getTransaction();
+            tx.begin();
             tournoi=tournoiRepository.getById(id);
             dto=new TournoiDto();
             dto.setId(tournoi.getId());
@@ -83,8 +88,8 @@ public class TournoiService {
             e.printStackTrace();
         }
         finally {
-            if(session!=null){
-                session.close();
+            if(em!=null){
+                em.close();
             }
 
         }

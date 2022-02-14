@@ -7,6 +7,8 @@ import com.mycompany.tennis.core.repository.JoueurRepositoryImpl;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -188,9 +190,15 @@ public class JoueurService {
         List <JoueurDto> dtos=new ArrayList<>();
         try {
             /*
-            getCurrentSession() va permettre de réutiliser une session qui sera
-            stocker quelque part ici en l'occurence dans le ThreadLocal
+           tennis-unit est le nom de persistance-unit du fichier persistence.xml;
+           getCurrentEntityManager() va permettre de réutiliser une session qui sera
+           stocker quelque part ici en l'occurence dans le ThreadLocal,
+           c'est l'équivalent de getCurrentSession() d'Hibernate
              */
+           EntityManagerFactory entityManagerFactory= Persistence.createEntityManagerFactory("tennis-unit");
+
+
+
             session = HibernateUtil.getSessionFactory().getCurrentSession();
             tx = session.beginTransaction();
             List<Joueur> joueurs=joueurRepository.list(sexe);
