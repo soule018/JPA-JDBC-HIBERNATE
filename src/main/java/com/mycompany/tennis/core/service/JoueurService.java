@@ -1,10 +1,14 @@
 package com.mycompany.tennis.core.service;
 
 import com.mycompany.tennis.core.HibernateUtil;
+import com.mycompany.tennis.core.dto.JoueurDto;
 import com.mycompany.tennis.core.entity.Joueur;
 import com.mycompany.tennis.core.repository.JoueurRepositoryImpl;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class JoueurService {
     /*
@@ -177,4 +181,41 @@ public class JoueurService {
         }
 
     }
+
+    public List<JoueurDto>getListJoueurs(){
+        Session session = null;
+        Transaction tx = null;
+        List <JoueurDto> dtos=new ArrayList<>();
+        try {
+            /*
+            getCurrentSession() va permettre de réutiliser une session qui sera
+            stocker quelque part ici en l'occurence dans le ThreadLocal
+             */
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            tx = session.beginTransaction();
+            List<Joueur> joueurs=joueurRepository.list();
+            for(Joueur joueur : joueurs){
+                final JoueurDto dto=new JoueurDto();
+                dto.setNom(joueur.getNom());
+                dto.setPrenom(joueur.getPrenom());
+                dto.setId(joueur.getId());
+                dto.setSexe(joueur.getSexe());
+                dtos.add(dto);
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+
+        }
+return dtos;
+    }
+
+
 }

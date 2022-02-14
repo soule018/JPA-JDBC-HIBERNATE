@@ -4,7 +4,7 @@ import com.mycompany.tennis.core.DataSourceProvider;
 import com.mycompany.tennis.core.HibernateUtil;
 import com.mycompany.tennis.core.entity.Joueur;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -40,56 +40,29 @@ public class JoueurRepositoryImpl {
 
     public List<Joueur> list () {
 
-        Connection conn = null;
-        List<Joueur> joueurs=new ArrayList<>();
-        try {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 
-          DataSource dataSource = DataSourceProvider.getSingleDataSourceInstance();
-            conn = dataSource.getConnection();
+        /*
+        La méthode createQuery prend deux paramètres,
+        le 1èr étant la chaîne de caractère HQL que l'on veut faire exécuter,
+        le 2ème paramètre est le type de classe que l'on veut retourner;
+        la requête hql a une syntaxe très proche du sql, elle interroge les classes java
+        et non les tables de la base de donnée,
+        la requête passée en paramètre signifie qu'on veut réaliser une requête qui va permettre de
+        "collecter toutes les propriétés de la classe Joueur qui sont décrites côté java",
+        on a ajouté un alias à la classe Joueur (ici j),
+        Cela va fonctionner car Hibernate connaît grâce aux annotations la classe associé Joueur et les colonnes
+        associées aux propriétés de la classe Joueur, donc il va pouvoir facilement convertir cela en requête sql
 
-            conn = dataSource.getConnection();
-
-            PreparedStatement preparedStatement = conn.prepareStatement("SELECT ID,NOM,PRENOM,SEXE FROM JOUEUR");
-            /*
-            les méthodes set de preparedStatement prennent en 1er paramètre
-            l'index du ? dans la requête sql,
-            ici, on a un seul paramètre,
-            le 2ème paramètre est la valeur qu'on veut donner à ce ?
-             */
-
-
-            ResultSet rs =preparedStatement.executeQuery();
-
-            while(rs.next()){
-                Joueur joueur=new Joueur();
-                joueur.setId(rs.getLong("ID"));
-                joueur.setNom(rs.getString("NOM"));
-                joueur.setPrenom(rs.getString("PRENOM"));
-                joueur.setSexe(rs.getString("SEXE").charAt(0));
-                joueurs.add(joueur);
-            }
-
-
-            System.out.println("joueurs lus");
-        } catch (SQLException e) {
-            e.printStackTrace();
-            try {
-                if (conn != null) conn.rollback();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
-        } finally {
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+         */
+        Query<Joueur> query = session.createQuery("select j from Joueur j", Joueur.class);
+        // A partir de ce query, on va pouvoir retourner le résultat de l'exécution de la query via un query.getResultList
+        List<Joueur> joueurs = query.getResultList();
+        System.out.println("joueurs lus");
         return joueurs;
-    }
 
+
+    }
 
 }
 
