@@ -5,7 +5,6 @@ import com.mycompany.tennis.core.dto.EpreuveFullDto;
 import com.mycompany.tennis.core.dto.MatchDto;
 import com.mycompany.tennis.core.dto.ScoreFullDto;
 import com.mycompany.tennis.core.dto.TournoiDto;
-import com.mycompany.tennis.core.entity.Match;
 import com.mycompany.tennis.core.entity.Score;
 import com.mycompany.tennis.core.repository.ScoreRepositoryImpl;
 import org.hibernate.Session;
@@ -72,6 +71,32 @@ public class ScoreService {
         }
 
         return dto;
+    }
+
+    public void deleteScore(Long id){
+        Session session = null;
+        Transaction tx = null;
+
+        try {
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            tx = session.beginTransaction();
+
+            scoreRepository.delete(id);
+            tx.commit();
+        }
+        catch (Exception e){
+            if(tx!=null) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+        }
+        finally {
+            if(session!=null){
+                session.close();
+            }
+
+        }
+
     }
 
 

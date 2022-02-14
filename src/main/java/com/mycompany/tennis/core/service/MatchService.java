@@ -195,20 +195,6 @@ public class MatchService {
 
             matchRepository.create(match);
 
-            /*ScoreFullDto scoreFullDto = new ScoreFullDto();
-            scoreFullDto.setSet1(dto.getScore().getSet1());
-            scoreFullDto.setSet2(dto.getScore().getSet2());
-            scoreFullDto.setSet3(dto.getScore().getSet3());
-            scoreFullDto.setSet4(dto.getScore().getSet4());
-            scoreFullDto.setSet5(dto.getScore().getSet5());*/
-           /*
-            match.getScore().setSet1(dto.getScore().getSet1());
-            match.getScore().setSet2(dto.getScore().getSet2());
-            match.getScore().setSet3(dto.getScore().getSet3());
-            match.getScore().setSet4(dto.getScore().getSet4());
-            match.getScore().setSet5(dto.getScore().getSet5());*/
-
-
             tx.commit();
         }
         catch (Exception e){
