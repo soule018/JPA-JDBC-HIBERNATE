@@ -1,5 +1,6 @@
 package com.mycompany.tennis.core.service;
 
+import com.mycompany.tennis.core.EntityManagerHolder;
 import com.mycompany.tennis.core.HibernateUtil;
 import com.mycompany.tennis.core.dto.JoueurDto;
 import com.mycompany.tennis.core.entity.Joueur;
@@ -7,7 +8,9 @@ import com.mycompany.tennis.core.repository.JoueurRepositoryImpl;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import java.util.ArrayList;
 import java.util.List;
@@ -185,22 +188,16 @@ public class JoueurService {
     }
 
     public List<JoueurDto>getListJoueurs(char sexe){
-        Session session = null;
-        Transaction tx = null;
+        //Session session = null;
+        EntityManager em=null;
+        EntityTransaction tx=null;
         List <JoueurDto> dtos=new ArrayList<>();
         try {
-            /*
-           tennis-unit est le nom de persistance-unit du fichier persistence.xml;
-           getCurrentEntityManager() va permettre de réutiliser une session qui sera
-           stocker quelque part ici en l'occurence dans le ThreadLocal,
-           c'est l'équivalent de getCurrentSession() d'Hibernate
-             */
-           EntityManagerFactory entityManagerFactory= Persistence.createEntityManagerFactory("tennis-unit");
 
-
-
-            session = HibernateUtil.getSessionFactory().getCurrentSession();
-            tx = session.beginTransaction();
+            //session= HibernateUtil.getSessionFactory().getCurrentSession();
+            em=new EntityManagerHolder().getCurrentEntityManager();
+            tx=em.getTransaction();
+            tx.begin();
             List<Joueur> joueurs=joueurRepository.list(sexe);
             for(Joueur joueur : joueurs){
                 final JoueurDto dto=new JoueurDto();
@@ -217,8 +214,8 @@ public class JoueurService {
             }
             e.printStackTrace();
         } finally {
-            if (session != null) {
-                session.close();
+            if (em != null) {
+                em.close();
             }
 
         }

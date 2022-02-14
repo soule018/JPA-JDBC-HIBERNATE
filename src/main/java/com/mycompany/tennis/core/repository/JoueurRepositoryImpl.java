@@ -1,9 +1,13 @@
 package com.mycompany.tennis.core.repository;
 
+import com.mycompany.tennis.core.EntityManagerHolder;
 import com.mycompany.tennis.core.HibernateUtil;
 import com.mycompany.tennis.core.entity.Joueur;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 public class JoueurRepositoryImpl {
@@ -35,7 +39,8 @@ public class JoueurRepositoryImpl {
 
     public List<Joueur> list (char sexe) {
 
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        //Session session= HibernateUtil.getSessionFactory().getCurrentSession();
+        EntityManager em= EntityManagerHolder.getCurrentEntityManager();
 
         /*
         La méthode createQuery prend deux paramètres,
@@ -50,7 +55,7 @@ public class JoueurRepositoryImpl {
         associées aux propriétés de la classe Joueur, donc il va pouvoir facilement convertir cela en requête sql
 
          */
-        Query<Joueur> query = session.createNamedQuery("given_sexe", Joueur.class);
+        TypedQuery<Joueur> query = em.createNamedQuery("given_sexe", Joueur.class);
         query.setParameter(0,sexe);
         // A partir de ce query, on va pouvoir retourner le résultat de l'exécution de la query via un query.getResultList
         List<Joueur> joueurs = query.getResultList();

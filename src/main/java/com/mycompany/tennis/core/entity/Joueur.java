@@ -2,8 +2,8 @@ package com.mycompany.tennis.core.entity;
 
 import javax.persistence.*;
 
-@org.hibernate.annotations.NamedQuery(query = "select j from Joueur j where j.sexe=?0",name ="given_sexe")
-@org.hibernate.annotations.NamedQuery(query = "select j from Joueur j where j.nom=?0",name ="given_name")
+@NamedQuery(query = "select j from Joueur j where j.sexe=?0",name ="given_sexe")
+@NamedQuery(query = "select j from Joueur j where j.nom=?0",name ="given_name")
 @Entity
 @Table(name="JOUEUR")
 public class Joueur {
